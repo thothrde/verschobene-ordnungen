@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Verschobene Ordnungen — Bilder, Nachbilder, zweite Lesarten. Automatische visuelle Sequenz aus Fotografien von Thomas Riepe mit kurzen Zwischentiteln.">
+  <title>Verschobene Ordnungen — Bilder, Nachbilder, zweite Lesarten</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app" aria-live="polite">
+    <div id="memory" class="memory" aria-hidden="true"></div>
+    <main id="stage" class="stage"></main>
+
+    <header class="masthead">
+      <div class="brand">VERSCHOBENE ORDNUNGEN <span>— Bilder, Nachbilder, zweite Lesarten</span></div>
+      <div class="controls">
+        <button id="prevBtn" type="button" aria-label="Vorherige Szene">←</button>
+        <button id="playBtn" type="button" aria-pressed="true">Pause</button>
+        <button id="nextBtn" type="button" aria-label="Nächste Szene">→</button>
+        <button id="provBtn" type="button" aria-pressed="false">Provenienz</button>
+      </div>
+    </header>
+
+    <div class="timeline" aria-hidden="true"><span id="timelineFill"></span></div>
+    <div id="sceneCount" class="scene-count" aria-hidden="true"></div>
+    <div class="hint">läuft automatisch · Leertaste Pause · ← → Szene · P Provenienz</div>
+  </div>
+  <noscript>Diese Fassung benötigt JavaScript.</noscript>
+  <script src="script.js"></script>
+</body>
+</html>

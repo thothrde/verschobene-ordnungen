@@ -1,0 +1,145 @@
+:root{
+  --bg:#050505;
+  --fg:#f3f2ed;
+  --muted:rgba(243,242,237,.58);
+  --glass:rgba(5,5,5,.52);
+  --line:rgba(255,255,255,.16);
+  --ease:cubic-bezier(.22,.72,.18,1);
+}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;background:var(--bg);color:var(--fg);overflow:hidden}
+body{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit;color:inherit}
+.app,.stage,.memory{position:fixed;inset:0}
+.app{background:#050505}
+.stage{z-index:3;overflow:hidden;isolation:isolate}
+.memory{z-index:1;background-position:center;background-size:cover;opacity:0;filter:blur(14px) grayscale(.2) saturate(.65);transform:scale(1.06);transition:opacity 1.6s ease,filter 1.6s ease,transform 8s linear}
+.memory.on{opacity:.105;filter:blur(7px) grayscale(.1) saturate(.78);transform:scale(1.015)}
+.stage::after{content:"";position:absolute;inset:0;z-index:40;pointer-events:none;background:radial-gradient(circle at 50% 45%,transparent 40%,rgba(0,0,0,.23) 100%)}
+
+.masthead{position:fixed;z-index:80;left:0;right:0;top:0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;mix-blend-mode:difference;color:white;pointer-events:none}
+.brand{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;pointer-events:auto;white-space:nowrap}.brand span{font-weight:400;opacity:.72}
+.controls{display:flex;gap:7px;pointer-events:auto}
+.controls button{border:1px solid rgba(255,255,255,.42);background:rgba(0,0,0,.18);backdrop-filter:blur(9px);border-radius:999px;padding:7px 10px;cursor:pointer;font-size:10px;letter-spacing:.05em}
+.controls button:hover{background:rgba(255,255,255,.13)}
+.controls button[aria-pressed="true"]{background:white;color:#050505;border-color:white}
+
+.timeline{position:fixed;z-index:90;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.09)}
+.timeline span{display:block;height:100%;width:0;background:white;transform-origin:left;transition:none}
+.scene-count{position:fixed;z-index:80;right:19px;bottom:17px;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.5)}
+.hint{position:fixed;z-index:79;left:50%;bottom:17px;transform:translateX(-50%);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.33);transition:opacity .7s;white-space:nowrap}
+body.interacted .hint{opacity:0}
+
+.scene{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity 1.25s ease;z-index:2}
+.scene.current{opacity:1;pointer-events:auto;z-index:5}
+.scene.leaving{opacity:0;z-index:4}
+
+/* OPENING + TEXT */
+.scene.opening,.scene.text{padding:9vh 8vw;text-align:center;background:transparent}
+.text-wrap{position:relative;z-index:20;max-width:1100px}
+.kicker{margin:0 0 22px;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted)}
+.opening h1{margin:0;font-family:ui-serif,Georgia,serif;font-size:clamp(42px,7vw,100px);font-weight:500;line-height:.94;letter-spacing:-.05em}
+.opening .sub{max-width:760px;margin:30px auto 0;color:var(--muted);font-size:clamp(15px,1.8vw,22px);line-height:1.5}
+.text p{margin:0;font-family:ui-serif,Georgia,serif;font-size:clamp(28px,5.4vw,74px);line-height:1.11;letter-spacing:-.032em;text-wrap:balance}
+.text p .soft{color:rgba(243,242,237,.5)}
+.scene.enter .text-wrap{animation:textIn 1.45s var(--ease) both}
+@keyframes textIn{from{opacity:0;transform:translateY(32px);filter:blur(7px)}to{opacity:1;transform:none;filter:none}}
+
+/* COMMON IMAGE */
+.photo{position:absolute;overflow:hidden;background:#111;box-shadow:0 28px 110px rgba(0,0,0,.42);will-change:transform,opacity,clip-path}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none;transform:scale(1.045);will-change:transform;transition:transform 9s linear}
+.current .photo img{transform:scale(1)}
+.photo.contain img{object-fit:contain;background:#050505}
+.prov{position:absolute;z-index:50;left:20px;bottom:17px;display:flex;gap:10px;align-items:center;font-size:10px;letter-spacing:.03em;color:rgba(255,255,255,.8);opacity:0;transform:translateY(7px);transition:.3s;pointer-events:none}
+.show-prov .prov{opacity:1;transform:none;pointer-events:auto}
+.prov a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35)}
+
+/* SINGLE */
+.single .photo{left:50%;top:50%;width:min(88vw,1500px);height:min(82vh,960px);transform:translate(-50%,-50%) scale(.96);opacity:.12}
+.single.current .photo{animation:singleIn 1.45s var(--ease) forwards}
+@keyframes singleIn{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.single.left .photo{left:43%}.single.right .photo{left:57%}
+
+/* FULL */
+.full .photo{inset:0;width:100%;height:100%;box-shadow:none;opacity:.18;transform:scale(1.03)}
+.full.current .photo{animation:fullIn 1.55s ease forwards}
+.full .photo img{object-fit:cover}
+@keyframes fullIn{to{opacity:1;transform:scale(1)}}
+
+/* DUET */
+.duet .photo{opacity:0}
+.duet .p1{left:4vw;top:9vh;width:58vw;height:70vh;transform:translate(-6vw,2vh) rotate(-1.4deg)}
+.duet .p2{right:3vw;bottom:7vh;width:49vw;height:61vh;transform:translate(7vw,-2vh) rotate(1.1deg)}
+.duet.current .p1{animation:duetA 1.45s var(--ease) forwards}
+.duet.current .p2{animation:duetB 1.6s .18s var(--ease) forwards}
+@keyframes duetA{to{opacity:1;transform:translate(0) rotate(-.35deg)}}
+@keyframes duetB{to{opacity:.93;transform:translate(0) rotate(.25deg)}}
+.relation{position:absolute;z-index:30;left:50%;bottom:6vh;transform:translate(-50%,12px);opacity:0;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.68)}
+.duet.current .relation{animation:labelIn .8s .85s ease forwards}@keyframes labelIn{to{opacity:1;transform:translate(-50%,0)}}
+
+/* TRIPTYCH */
+.triptych .photo{width:34vw;height:62vh;top:19vh;opacity:0}
+.triptych .p1{left:3vw;transform:translateX(-5vw) rotate(-1deg)}
+.triptych .p2{left:33vw;z-index:7;height:70vh;top:15vh;transform:translateY(6vh)}
+.triptych .p3{right:3vw;transform:translateX(5vw) rotate(1deg)}
+.triptych.current .p1{animation:triL 1.3s var(--ease) forwards}
+.triptych.current .p2{animation:triM 1.5s .16s var(--ease) forwards}
+.triptych.current .p3{animation:triR 1.3s .3s var(--ease) forwards}
+@keyframes triL{to{opacity:.88;transform:translateX(0) rotate(-.25deg)}}
+@keyframes triM{to{opacity:1;transform:translateY(0)}}
+@keyframes triR{to{opacity:.88;transform:translateX(0) rotate(.25deg)}}
+
+/* SPLIT */
+.split .photo{top:0;height:100%;width:52%;box-shadow:none;opacity:0}
+.split .p1{left:0;clip-path:polygon(0 0,100% 0,87% 100%,0 100%);transform:translateX(-4vw)}
+.split .p2{right:0;clip-path:polygon(13% 0,100% 0,100% 100%,0 100%);transform:translateX(4vw)}
+.split.current .p1{animation:splitL 1.35s var(--ease) forwards}.split.current .p2{animation:splitR 1.35s .15s var(--ease) forwards}
+@keyframes splitL{to{opacity:.95;transform:none}}@keyframes splitR{to{opacity:.95;transform:none}}
+
+/* FLOAT */
+.float .photo{opacity:0}
+.float .p1{width:64vw;height:74vh;left:9vw;top:12vh;transform:scale(.92) rotate(-1deg)}
+.float .p2{width:31vw;height:44vh;right:6vw;top:8vh;transform:translateY(-5vh) rotate(2deg);z-index:8}
+.float.current .p1{animation:floatA 1.5s var(--ease) forwards}.float.current .p2{animation:floatB 1.6s .25s var(--ease) forwards}
+@keyframes floatA{to{opacity:1;transform:scale(1) rotate(-.2deg)}}@keyframes floatB{to{opacity:.9;transform:none}}
+
+/* FLICKER: three photographs swap automatically within one scene */
+.flicker .photo{inset:7vh 7vw;width:auto;height:auto;box-shadow:none;opacity:0;transform:scale(1.02)}
+.flicker .photo img{object-fit:contain;background:#050505}
+.flicker.current .p1{animation:flickA var(--scene-duration) linear both}
+.flicker.current .p2{animation:flickB var(--scene-duration) linear both}
+.flicker.current .p3{animation:flickC var(--scene-duration) linear both}
+@keyframes flickA{0%,27%{opacity:1;transform:scale(1)}31%,100%{opacity:0;transform:scale(1.015)}}
+@keyframes flickB{0%,29%{opacity:0}34%,60%{opacity:1;transform:scale(1)}64%,100%{opacity:0;transform:scale(.99)}}
+@keyframes flickC{0%,62%{opacity:0}67%,100%{opacity:1;transform:scale(1)}}
+
+/* AFTERIMAGE */
+.afterimage .old{position:absolute;inset:0;opacity:0;filter:blur(5px) grayscale(.25)}
+.afterimage .old img{width:100%;height:100%;object-fit:cover}
+.afterimage .photo{width:min(78vw,1180px);height:min(80vh,900px);left:50%;top:50%;transform:translate(-50%,-50%) scale(.92);opacity:.1}
+.afterimage.current .old{animation:oldIn 1.8s ease forwards}.afterimage.current .photo{animation:presentIn 1.6s .25s var(--ease) forwards}
+@keyframes oldIn{to{opacity:.14}}@keyframes presentIn{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+
+/* CLOSING */
+.closing{padding:9vh 8vw;text-align:center}.closing .text-wrap{max-width:940px}.closing h2{margin:0;font-family:ui-serif,Georgia,serif;font-size:clamp(38px,6vw,88px);line-height:1;letter-spacing:-.045em;font-weight:500}.closing .small{margin:28px auto 0;max-width:740px;color:var(--muted);line-height:1.6;font-size:12px}
+
+@media(max-width:800px){
+ .masthead{padding:12px 12px}.brand span{display:none}.controls button{padding:6px 8px}.controls #provBtn{display:none}
+ .hint{display:none}.scene-count{right:12px;bottom:12px}.prov{left:12px;bottom:12px;right:12px;flex-wrap:wrap}
+ .duet .p1{left:2vw;top:10vh;width:75vw;height:55vh}.duet .p2{right:1vw;bottom:10vh;width:66vw;height:48vh}
+ .triptych .photo{width:56vw;height:49vh;top:24vh}.triptych .p1{left:-17vw}.triptych .p2{left:22vw;height:58vh;top:20vh}.triptych .p3{right:-18vw}
+ .single .photo{width:94vw;height:78vh}.single.left .photo,.single.right .photo{left:50%}
+ .float .p1{width:84vw;height:65vh;left:4vw;top:17vh}.float .p2{width:45vw;height:34vh;right:2vw;top:7vh}
+ .flicker .photo{inset:10vh 3vw}
+}
+
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .scene.current,.current .photo,.current .text-wrap{opacity:1!important;transform:none!important}
+ .memory{display:none}
+}
+
+/* INTERTITLES */
+.intertitle-wrap{max-width:900px}
+.text .intertitle-wrap p{font-family:ui-serif,Georgia,serif;font-size:clamp(34px,6vw,86px);font-weight:500;line-height:1.02;letter-spacing:-.045em;text-wrap:balance}
+.text .intertitle-wrap p::after{content:"";display:block;width:42px;height:1px;background:rgba(255,255,255,.38);margin:28px auto 0}
